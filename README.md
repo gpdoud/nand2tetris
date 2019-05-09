@@ -69,3 +69,19 @@ inputs a, b output is 1 if a is 1 or b is 1
 
 ### Xor
 input a, b output is 1 if either a or b is 1 but not both
+
+## Week 2
+
+To turn a negative decimal into binary (i.e -7)
+1) subtract number from 16 (16 - 7 = 9 :: 1001)
+2) add 1 (1001 + 0001 = 1010)
+
+9 - 4
+9 + (-4)
+-4 = 16 - 4 = 12 = 1100 negate = 0011 + 1 = 0100
+1001
+1101
+====
+0110
+
+### ALU
