@@ -85,3 +85,29 @@ To turn a negative decimal into binary (i.e -7)
 0110
 
 ### ALU
+
+## Week 3
+
+### 8-Register RAM 
+
+Tips:
+
+* Feed the `in` value to all the registers simultaneously
+* Use Mux/DMux chips to select the right register
+
+### RAM8
+
+Tips:
+
+* Stack 8 x 8-Register Ram to make RAM8
+* Stack 8 x RAM8 to make RAM64; etc.
+* Think about the RAM's `address` input as consisting of two fields:
+  * one field can be used to select a RAM-part
+  * other field can be used to select a register within that RAM-part
+* Use Mux/DMux to effect this addressing scheme
+
+### PC (Program Counter)
+
+Tips:
+
+* can be built from a register, in incrementor, and some logic gates
