@@ -1,0 +1,8 @@
+CHIP MO {
+    IN in;
+    OUT out;
+
+    PARTS:
+    Not (in=in, out=nin);
+    Or (a=nin, out=out, out=oin, out=onin);
+}
