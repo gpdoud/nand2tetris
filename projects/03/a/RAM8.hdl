@@ -25,34 +25,17 @@ CHIP RAM8 {
 
     PARTS:
     // use address to identify the register
-    DMux8Way (in=true, sel=address, a=r0load, b=r1load, c=r2load, d=r3load, e=r4load, f=r5load, g=r6load, h=r7load);
+    DMux8Way (in=load, sel=address, a=a, b=b, c=c, d=d, e=e, f=f, g=g, h=h);
 
-    // should register 0 be loaded?
-    And (a=r0load, b=load, out=load0);
-    // if so, load it with input
-    Register (in=in, load=load0, out=r0);
-
-    And (a=r1load, b=load, out=load1);
-    Register (in=in, load=load1, out=r1);
-
-    And (a=r2load, b=load, out=load2);
-    Register (in=in, load=load2, out=r2);
-
-    And (a=r3load, b=load, out=load3);
-    Register (in=in, load=load3, out=r3);
-
-    And (a=r4load, b=load, out=load4);
-    Register (in=in, load=load4, out=r4);
-
-    And (a=r5load, b=load, out=load5);
-    Register (in=in, load=load5, out=r5);
-
-    And (a=r6load, b=load, out=load6);
-    Register (in=in, load=load6, out=r6);
-
-    And (a=r7load, b=load, out=load7);
-    Register (in=in, load=load7, out=r7);
+    Register (in=in, load=a, out=ra);
+    Register (in=in, load=b, out=rb);
+    Register (in=in, load=c, out=rc);
+    Register (in=in, load=d, out=rd);
+    Register (in=in, load=e, out=re);
+    Register (in=in, load=f, out=rf);
+    Register (in=in, load=g, out=rg);
+    Register (in=in, load=h, out=rh);
 
     // copy selected register to out
-    Mux8Way16 (a=r0, b=r1, c=r2, d=r3, e=r4, f=r5, g=r6, h=r7, sel=address, out=out);
+    Mux8Way16 (a=ra, b=rb, c=rc, d=rd, e=re, f=rf, g=rg, h=rh, sel=address, out=out);
 }
