@@ -14,10 +14,17 @@ namespace HackAssembler
         {
             var fileToParse = ParseCommandLine(args);
             var src = new Source(fileToParse);
-            var line = src.Next();
-            while(line != null) {
-                Console.WriteLine($"{line}");
-                line = src.Next();
+            src.Read();
+            while(src.Next()) {
+                Code code = null;
+                var parser = new Parser(src.Line);
+                if(!parser.IsAInst) { // Is a C instruction
+                    code = new Code(parser.Comp, parser.Dest, parser.Jump);
+                } else if (parser.IsAAddr) {
+                    code = new Code(parser.Addr);
+                } else if (parser.IsASymb) {
+                    code = new Code(parser.Symb);
+                }
             }
         }
         static void Main(string[] args)
