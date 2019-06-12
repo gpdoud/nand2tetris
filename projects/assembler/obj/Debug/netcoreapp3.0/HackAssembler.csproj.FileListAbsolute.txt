@@ -1,0 +1,12 @@
+c:\repos\nand2tetris\projects\assembler\bin\Debug\netcoreapp3.0\HackAssembler.exe
+C:\repos\nand2tetris\projects\assembler\bin\Debug\netcoreapp3.0\HackAssembler.deps.json
+C:\repos\nand2tetris\projects\assembler\bin\Debug\netcoreapp3.0\HackAssembler.runtimeconfig.json
+C:\repos\nand2tetris\projects\assembler\bin\Debug\netcoreapp3.0\HackAssembler.runtimeconfig.dev.json
+c:\repos\nand2tetris\projects\assembler\bin\Debug\netcoreapp3.0\HackAssembler.dll
+c:\repos\nand2tetris\projects\assembler\bin\Debug\netcoreapp3.0\HackAssembler.pdb
+c:\repos\nand2tetris\projects\assembler\obj\Debug\netcoreapp3.0\HackAssembler.csprojAssemblyReference.cache
+c:\repos\nand2tetris\projects\assembler\obj\Debug\netcoreapp3.0\HackAssembler.csproj.CoreCompileInputs.cache
+c:\repos\nand2tetris\projects\assembler\obj\Debug\netcoreapp3.0\HackAssembler.AssemblyInfoInputs.cache
+c:\repos\nand2tetris\projects\assembler\obj\Debug\netcoreapp3.0\HackAssembler.AssemblyInfo.cs
+c:\repos\nand2tetris\projects\assembler\obj\Debug\netcoreapp3.0\HackAssembler.dll
+c:\repos\nand2tetris\projects\assembler\obj\Debug\netcoreapp3.0\HackAssembler.pdb
