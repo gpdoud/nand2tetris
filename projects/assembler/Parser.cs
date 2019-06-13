@@ -27,11 +27,24 @@ namespace HackAssembler {
                 }
                 return;
             }
-            // otherwise a C instruction
+            // otherwise a C instruction (both = and ; are optional)
+            // M=D | M=D;JEQ | 0;JMP 
+            var hasEqual = Line.Contains('=');
+            var hasSemicolon = Line.Contains(';');
             var parts = Line.Split(new char[] { '=', ';' });
-            Dest = parts[0];
-            Comp = parts[1];
-            Jump = (parts.Length > 2) ? parts[2] : "null";
+            if(hasEqual && hasSemicolon) { // M=D;JEQ 
+                Dest = parts[0];
+                Comp = parts[1];
+                Jump = parts[2];
+            } else if(hasEqual) { // M=D
+                Dest = parts[0];
+                Comp = parts[1];
+                Jump = "null";
+            } else { // 0;JMP
+                Dest = "null";
+                Comp = parts[0];
+                Jump = parts[1];
+            }
         }
 
         public Parser(string Line) {
