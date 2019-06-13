@@ -60,18 +60,32 @@ namespace HackAssembler {
             ["JMP"]  =  new JumpTable("JMP", '1', '1', '1')
         };
 
-
-        public string GenerateAInstruction(int address) {
+        public string ToHack() {
+            switch(this.instructionType) {
+                case InstructionType.A_REGISTER:
+                    return GenerateAInstruction(this.addr);
+                case InstructionType.A_SYMBOL: 
+                    return GenerateAInstruction(this.symb);
+                case InstructionType.C: 
+                    return GenerateCInstruction(this.comp, this.dest, this.jump);
+            }
+            return "Invalid instruction type";
+        }
+        string GenerateAInstruction(int address) {
             var hack = ConvertToBinary(address);
             return hack;
         }
-        public string GenerateAInstruction(string symbol) {
+        string GenerateAInstruction(string symbol) {
             return symbol;
         }
-        public string GenerateCInstruction(string comp, string dest, string jump) {
+        string GenerateCInstruction(string comp, string dest, string jump) {
             var hack = new StringBuilder("111"); // all C-inst start this way
             var compStr = compTable[comp].ToHack();
             hack.Append(compStr);
+            var destStr = destTable[dest].ToHack();
+            hack.Append(destStr);
+            var jumpStr = jumpTable[jump].ToHack();
+            hack.Append(jumpStr);
             return hack.ToString();
         }
         string ConvertToBinary(int i) {

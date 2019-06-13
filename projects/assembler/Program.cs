@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Collections.Generic;
 
 namespace HackAssembler
 {
@@ -10,12 +12,20 @@ namespace HackAssembler
             }
             return args[0];
         }
+        string CreateHackFilename(string asmFilename) {
+            var len = asmFilename.IndexOf('.');
+            var hackFilename = $"{asmFilename.Substring(0, len)}.hack";
+            return hackFilename;
+        }
         void Run(string[] args)
         {
-            var fileToParse = ParseCommandLine(args);
-            var src = new Source(fileToParse);
+            var asmFilename = ParseCommandLine(args);
+            var hackFilename = CreateHackFilename(asmFilename);
+            var hackLines = new List<string>();
+
+            var src = new Source(asmFilename);
             src.Read();
-            while(src.Next()) {
+            while(src.Next()) { 
                 Code code = null;
                 var parser = new Parser(src.Line);
                 if(!parser.IsAInst) { // Is a C instruction
@@ -25,7 +35,12 @@ namespace HackAssembler
                 } else if (parser.IsASymb) {
                     code = new Code(parser.Symb);
                 }
+                var hack = code.ToHack();
+                hackLines.Add($"{hack}");
+                Console.WriteLine(hack);
             }
+            File.WriteAllLines(hackFilename, hackLines);
+            
         }
         static void Main(string[] args)
         {
