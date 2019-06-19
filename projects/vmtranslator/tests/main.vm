@@ -1,0 +1,6 @@
+// *** Things that work ***
+// push constant|temp n
+// pop local|temp n
+push constant 2
+push constant 3
+add
