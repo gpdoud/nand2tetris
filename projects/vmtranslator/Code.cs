@@ -38,6 +38,35 @@ namespace vmtranslator {
                 }
             );
         }
+        private void Sub() {
+            codeLines.AddRange(
+                new string[] {
+                    $"// pop",
+                    $"@SP   // get the SP",
+                    $"M=M-1   // ptr to top of stk",
+                    $"A=M   // ptr to top",
+                    $"D=M   // sav val in D",
+                    $"// store D in R1",
+                    $"@R13",
+                    $"M=D",
+                    $"// pop",
+                    $"@SP   // get the SP",
+                    $"M=M-1   // ptr to top of stk",
+                    $"A=M   // ptr to top",
+                    $"D=M   // sav val in D",
+                    $"// add to R13",
+                    $"@R13",
+                    $"M=D-M // sub",
+                    $"D=M // sav in D",
+                    $"// push D",
+                    $"@SP",
+                    $"A=M",
+                    $"M=D",
+                    $"@SP   // SP++",
+                    $"M=M+1"
+                }
+            );
+        }
         private void PushLocal() {
             // @nbr
             codeLines.AddRange(
@@ -130,12 +159,21 @@ namespace vmtranslator {
             var tempReg = 5 + parser.Nbr;
             codeLines.AddRange(
                 new string[] {
-                    $"@SP   // get the SP",
-                    $"M=M-1   // ptr to top of stk",
-                    $"A=M   // ptr to top",
-                    $"D=M   // sav val in D",
-                    $"@{tempReg}     // idx to temp",
-                    $"M=D   // sav D to temp reg"
+                    $"@R5       // R5 is Temp",
+                    $"D=A       // sav in D",
+                    $"@R13      // R13 is temp reg",
+                    $"M=D       // stor R5 in R13",
+                    $"@{parser.Nbr}        // temp 2",
+                    $"D=A       // stor nbr in D",
+                    $"@R13      // switch to R13",
+                    $"M=M+D     // R13 points to temp n",
+                    $"@SP       // pop from stack",
+                    $"M=M-1     // dec SP to pt to top",
+                    $"A=M       // addr top SP",
+                    $"D=M       // stor val in D",
+                    $"@R13      // switch to R13",
+                    $"A=M       // get R13 addr",
+                    $"M=D       // stor D in temp n"
                 }
             );
         }
@@ -143,6 +181,7 @@ namespace vmtranslator {
             codeLines.Add($"// {parser.Line}"); // change vm code into comment
             switch (parser.Type) {
                 case LineType.Add:                  Add();              break;
+                case LineType.Sub:                  Sub();              break;
 
                 case LineType.Push: // push segment nbr
                     switch (parser.Segment) {
