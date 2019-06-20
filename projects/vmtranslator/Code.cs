@@ -67,6 +67,64 @@ namespace vmtranslator {
                 }
             );
         }
+        private void Neg() {
+            codeLines.AddRange(
+                new string[] {
+                    "// neg (pop, negate, push)",
+                    $"@SP",
+                    $"M=M-1 // SP--",
+                    $"A=M",
+                    $"D=M  // sto in D",
+                    $"D=!D // negate",
+                    $"D=D+1  // add 1",
+                    $"M=D   // stor back in SP",
+                    $"@SP",
+                    $"M=M+1     // SP++",
+                }
+            );
+        }
+        private void Eq() {
+            codeLines.AddRange(
+                new string[] {
+
+                }
+            );
+        }
+        private void Gt() {
+            codeLines.AddRange(
+                new string[] {
+
+                }
+            );
+        }
+        private void Lt() {
+            codeLines.AddRange(
+                new string[] {
+
+                }
+            );
+        }
+        private void And() {
+            codeLines.AddRange(
+                new string[] {
+
+                }
+            );
+        }
+        private void Or() {
+            codeLines.AddRange(
+                new string[] {
+
+                }
+            );
+        }
+        private void Not() {
+            codeLines.AddRange(
+                new string[] {
+
+                }
+            );
+        }
         private void PushLocal() {
             // @nbr
             codeLines.AddRange(
@@ -182,6 +240,13 @@ namespace vmtranslator {
             switch (parser.Type) {
                 case LineType.Add:                  Add();              break;
                 case LineType.Sub:                  Sub();              break;
+                case LineType.Neg:                  Neg();              break;
+                case LineType.Eq:                   Eq();               break;
+                case LineType.Gt:                   Gt();               break;
+                case LineType.Lt:                   Lt();               break;
+                case LineType.And:                  And();              break;
+                case LineType.Or:                   Or();               break;
+                case LineType.Not:                  Not();              break;
 
                 case LineType.Push: // push segment nbr
                     switch (parser.Segment) {

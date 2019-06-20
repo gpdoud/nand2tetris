@@ -22,7 +22,18 @@ A=M  // set ptr to new A
 M=D  // store nbr in A
 @SP  // addr SP
 M=M+1  // inc SP
-// sub
+// neg
+// neg (pop, negate, push)
+@SP
+M=M-1 // SP--
+A=M
+D=M  // sto in D
+D=!D // negate
+D=D+1  // add 1
+M=D   // stor back in SP
+@SP
+M=M+1     // SP++
+// add
 // pop
 @SP   // get the SP
 M=M-1   // ptr to top of stk
@@ -38,13 +49,13 @@ A=M   // ptr to top
 D=M   // sav val in D
 // add to R13
 @R13
-M=D-M // sub
+M=M+D // add
 D=M // sav in D
-// push D
+// push R13
 @SP
 A=M
 M=D
-@SP   // SP++
+@SP
 M=M+1
 // add
 // pop

@@ -1,10 +1,11 @@
 // *** Things that work ***
-// add
+// add, sub, neg
 // push constant|temp n
 // pop local|temp n
 push constant 7
 push constant 5
 push constant 2
-sub
+neg
+add
 add
 pop temp 0
