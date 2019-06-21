@@ -86,15 +86,72 @@ namespace vmtranslator {
         private void Eq() {
             codeLines.AddRange(
                 new string[] {
-
+                    "// eq (true is 0; false = -1)",
+                    "// pop",
+                    "@SP   // get the SP",
+                    "M=M-1   // ptr to top of stk",
+                    "A=M   // ptr to top",
+                    "D=M   // sav val in D",
+                    "// store D in R1",
+                    "@R13 //",
+                    "M=D     //",
+                    "// pop",
+                    "@SP   // get the SP",
+                    "M=M-1   // ptr to top of stk",
+                    "A=M   // ptr to top",
+                    "D=M   // sav val in D",
+                    "// 1st pop is in R13, 2nd in D",
+                    "@R13",
+                    "M=M-D   // if zero; equal",
+                    "@R14",
+                    "M=0",
+                    "D=M",
+                    "@R13",
+                    "M=M|D   // if zero; true else false",
+                    "D=M",
+                    "// push onto SP",
+                    "@SP",
+                    "A=M",
+                    "M=D",
+                    "@SP",
+                    "M=M+1"
                 }
             );
         }
         private void Gt() {
             codeLines.AddRange(
                 new string[] {
-
-                }
+                    "// eq (true is 0; false = -1)",
+                    "// pop",
+                    "@SP   // get the SP",
+                    "M=M-1   // ptr to top of stk",
+                    "A=M   // ptr to top",
+                    "D=M   // sav val in D",
+                    "// store D in R1",
+                    "@R13 //",
+                    "M=D     //",
+                    "// pop",
+                    "@SP   // get the SP",
+                    "M=M-1   // ptr to top of stk",
+                    "A=M   // ptr to top",
+                    "D=M   // sav val in D",
+                    "// 1st pop is in R13, 2nd in D",
+                    "@R13",
+                    "M=M-D   // if R13 > 0 then true else false",
+                    "@32767  // set to chk negative bit",
+                    
+                    "@R14",
+                    "M=0",
+                    "D=M",
+                    "@R13",
+                    "M=M|D   // if zero; true else false",
+                    "D=M",
+                    "// push onto SP",
+                    "@SP",
+                    "A=M",
+                    "M=D",
+                    "@SP",
+                    "M=M+1"                }
             );
         }
         private void Lt() {

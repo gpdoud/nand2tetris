@@ -24,6 +24,8 @@ add, sub, neg, eq, gt, lt, and, or, not (Arithmetic/Logical)
 
 push/pop *segment* *n* (Memory)
 
+push/pop pointer 0 (THIS) / 1 (THAT)
+
 label *x*, goto *x*, if-goto *x* (Branching)
 
 function *name* *nVars*, call *name* *nVars*, return (Function)
