@@ -15,11 +15,14 @@ namespace vmtranslator {
             var source = new Source(inFilename);
             // create collection for generated ASM
             List<string> asm = new List<string>();
+            // count each input line
+            var lineCnt = 0;
             // process each line
             while(source.Read()) {
                 var parser = new Parser(source.Current);
-                var code = new Code(parser);
+                var code = new Code(parser, lineCnt);
                 asm.AddRange(code.ToAsm());
+                lineCnt++;
             }
             // done translating; write out file
             System.IO.File.WriteAllLines(outFilename, asm.ToArray());

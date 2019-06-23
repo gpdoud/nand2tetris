@@ -1,13 +1,2 @@
-// *** Things that work ***
-// add, sub, neg
-// push constant|temp n
-// pop local|temp n
-push constant 2
-push constant 5
-gt // result 0
-push constant 5
-push constant 2
-gt // result -1
-push constant 3
-push constant 3
-gt // return 0
+push constant 444
+pop that 4

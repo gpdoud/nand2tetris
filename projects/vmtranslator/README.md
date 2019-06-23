@@ -22,7 +22,7 @@ VM Commands
 
 add, sub, neg, eq, gt, lt, and, or, not (Arithmetic/Logical)
 
-push/pop *segment* *n* (Memory)
+push/pop *segment* *n* (Memory) [Note: n 0 <= *n*]
 
 push/pop pointer 0 (THIS) / 1 (THAT)
 

@@ -5,10 +5,11 @@ namespace vmtranslator {
 
     class Code {
 
+        private int lineCnt;
         private Parser parser { get; set; }
         List<string> codeLines = new List<string>();
         public string[] ToAsm() { return codeLines.ToArray(); }
-
+        // pop top 2 from stack; add them; push result to stack
         private void Add() {
             codeLines.AddRange(
                 new string[] {
@@ -38,6 +39,7 @@ namespace vmtranslator {
                 }
             );
         }
+        // pop top 2 from stack; subtract them; push result to stack
         private void Sub() {
             codeLines.AddRange(
                 new string[] {
@@ -67,6 +69,7 @@ namespace vmtranslator {
                 }
             );
         }
+        // pop top of stack; negate; push result to stack
         private void Neg() {
             codeLines.AddRange(
                 new string[] {
@@ -83,6 +86,7 @@ namespace vmtranslator {
                 }
             );
         }
+        // pop 2 from stack; if equal push -1 else push 0 to stack
         private void Eq() {
             codeLines.AddRange(
                 new string[] {
@@ -118,35 +122,78 @@ namespace vmtranslator {
                 }
             );
         }
+        // pop 2 from stack; if 1st > 2nd push -1 else push 0 to stack
         private void Gt() {
             codeLines.AddRange(
                 new string[] {
-                    "// eq (true is 0; false = -1)",
-                    "// pop",
-                    "@SP   // get the SP",
-                    "M=M-1   // ptr to top of stk",
-                    "A=M   // ptr to top",
-                    "D=M   // sav val in D",
-                    "// store D in R1",
-                    "@R13 //",
-                    "M=D     //",
-                    "// pop",
-                    "@SP   // get the SP",
-                    "M=M-1   // ptr to top of stk",
-                    "A=M   // ptr to top",
-                    "D=M   // sav val in D",
-                    "// 1st pop is in R13, 2nd in D",
+                    "@SP     // addr 0",
+                    "M=M-1",
+                    "A=M",
+                    "D=M",
                     "@R13",
-                    "M=M-D   // if R13 > 0 then true else false",
-                    "@32767  // set to chk negative bit",
-                    
+                    "M=D",
+                    "@SP",
+                    "M=M-1",
+                    "A=M",
+                    "D=M",
                     "@R14",
-                    "M=0",
+                    "M=D",
+                    "D=M",
+                    "@14",
+                    "M=0    // default to false",
+                    "@R13",
+                    "M=D-M",
+                    "D=M",
+                    $"@GT{lineCnt}",
+                    "D;JGT",
+                    $"@FINI{lineCnt}",
+                    "0;JMP",
+                    $"(GT{lineCnt})",
+                    "@R14",
+                    "M=-1",
+                    $"(FINI{lineCnt})",
+                    "@R14",
+                    "D=M",
+                    "@SP",
+                    "A=M",
+                    "M=D",
+                    "@SP",
+                    "M=M+1"
+                }
+            );
+        }
+        // pop 2 from stack; if 1st < 2nd push -1 else push 0 to stack
+        private void Lt() {
+            codeLines.AddRange(
+                new string[] {
+                    "@SP     // addr 0",
+                    "M=M-1",
+                    "A=M",
                     "D=M",
                     "@R13",
-                    "M=M|D   // if zero; true else false",
+                    "M=D",
+                    "@SP",
+                    "M=M-1",
+                    "A=M",
                     "D=M",
-                    "// push onto SP",
+                    "@R14",
+                    "M=D",
+                    "D=M",
+                    "@14",
+                    "M=0    // default to false",
+                    "@R13",
+                    "M=D-M",
+                    "D=M",
+                    $"@LT{lineCnt}",
+                    "D;JLT",
+                    $"@FINI{lineCnt}",
+                    "0;JMP",
+                    $"(LT{lineCnt})",
+                    "@R14",
+                    "M=-1",
+                    $"(FINI{lineCnt})",
+                    "@R14",
+                    "D=M",
                     "@SP",
                     "A=M",
                     "M=D",
@@ -154,41 +201,86 @@ namespace vmtranslator {
                     "M=M+1"                }
             );
         }
-        private void Lt() {
-            codeLines.AddRange(
-                new string[] {
-
-                }
-            );
-        }
+        // pop top 2 from stack; AND them; push result to stack
         private void And() {
             codeLines.AddRange(
                 new string[] {
-
+                    "@SP     // addr 0",
+                    "M=M-1",
+                    "A=M",
+                    "D=M     // pop in D",
+                    "@R13",
+                    "M=D     // sto D in R13",
+                    "@SP",
+                    "M=M-1",
+                    "A=M",
+                    "D=M&D     // pop in D",
+                    "@SP",
+                    "A=M",
+                    "M=D      // push D",
+                    "@SP",
+                    "M=M+1"
                 }
             );
         }
+        // pop top 2 from stack; OR them; push result to stack
         private void Or() {
             codeLines.AddRange(
                 new string[] {
-
+                    "@SP     // addr 0",
+                    "M=M-1",
+                    "A=M",
+                    "D=M     // pop in D",
+                    "@R13",
+                    "M=D     // sto D in R13",
+                    "@SP",
+                    "M=M-1",
+                    "A=M",
+                    "D=M|D     // pop in D",
+                    "@SP",
+                    "A=M",
+                    "M=D      // push D",
+                    "@SP",
+                    "M=M+1"                
                 }
             );
         }
+        // pop top of stack; NOT; push result to stack
         private void Not() {
             codeLines.AddRange(
                 new string[] {
-
+                    "@SP     // addr 0",
+                    "M=M-1",
+                    "A=M",
+                    "D=M     // pop in D",
+                    "D=!D    // NOT",
+                    "D=D+1   // 2's complement",
+                    "@SP",
+                    "A=M",
+                    "M=D      // push D",
+                    "@SP",
+                    "M=M+1"  
                 }
             );
         }
+        // push local *n* value onto stack
         private void PushLocal() {
-            // @nbr
             codeLines.AddRange(
                 new string[] {
+                    $"@{parser.Nbr} // @nbr",
+                    "D=A  // store nbr in D",
+                    "@1  // @LCL",
+                    "A=M+D  // set ptr to new A",
+                    "D=M  // sav local nbr to D",
+                    "@SP",
+                    "A=M  // addr of top",
+                    "M=D  // push nbr",
+                    "@SP",
+                    "M=M+1"
                 }
             );
         }
+        // push constant value onto stack
         private void PushConstant() {
             // @nbr
             codeLines.AddRange(
@@ -203,16 +295,25 @@ namespace vmtranslator {
                 }
             );
         }
+        // push static (R16) *n* value onto stack
         private void PushStatic() {
-            // @nbr
             codeLines.AddRange(
                 new string[] {
+                    $"@{parser.Nbr} // @nbr",
+                    "D=A  // store nbr in D",
+                    "@16  // @STATIC",
+                    "A=A+D  // set ptr to new A",
+                    "D=M  // sav local nbr to D",
+                    "@SP",
+                    "A=M  // addr of top",
+                    "M=D  // push nbr",
+                    "@SP",
+                    "M=M+1"
                 }
             );
         }
         // Push temp reg to stack
         private void PushTemp() {
-            // @nbr
             var tempReg = 5 + parser.Nbr;
             codeLines.AddRange(
                 new string[] {
@@ -227,13 +328,47 @@ namespace vmtranslator {
                 }
             );
         }
-        // Pop off the stack and store on local
+        // Push this *n* on the stack :: this = R3
+        private void PushThis() {
+            codeLines.AddRange(
+                new string[] {
+                    $"// push this {parser.Nbr}",
+                    $"@{parser.Nbr}",
+                    "D=A",
+                    "@R3 // @THIS",
+                    "A=D+M",
+                    "D=M  // stor val in D",
+                    "@SP  // SP",
+                    "A=M",
+                    "M=D  // stor D on stack",
+                    "@SP",
+                    "M=M+1  // SP++"
+                }
+            );
+        }
+        // Push that *n* on the stack :: that = R4
+        private void PushThat() {
+            codeLines.AddRange(
+                new string[] {
+                    $"// push that {parser.Nbr}",
+                    $"@{parser.Nbr}",
+                    "D=A",
+                    "@R4 // @THAT",
+                    "A=D+M",
+                    "D=M  // stor val in D",
+                    "@SP  // SP",
+                    "A=M",
+                    "M=D  // stor D on stack",
+                    "@SP",
+                    "M=M+1  // SP++"
+                }
+            );
+        }
         private void PopLocal() {
             var regOffset = parser.Nbr;
             codeLines.AddRange(
                 new string[] {
                     $"// *** pop local {regOffset} ***",
-                    $"// stor R13 in local 1",
                     $"@{regOffset}      // local offset",
                     $"D=A     // store offset in D",
                     $"@1      // @LCL (local 0)",
@@ -253,11 +388,12 @@ namespace vmtranslator {
                 }
             );
         }
-        // Pop off the stack and store on costant
+        // Pop off the stack and store on constant
         private void PopConstant() {
             var regOffset = parser.Nbr;
             codeLines.AddRange(
                 new string[] {
+                    $"// pop constant {parser.Nbr} - NOT VALID "
                 }
             );
         }
@@ -266,6 +402,24 @@ namespace vmtranslator {
             var regOffset = parser.Nbr;
             codeLines.AddRange(
                 new string[] {
+                    "// pop static 3 (pop from sp & stor in static (R16) + n)",
+                    "@SP",
+                    "M=M-1",
+                    "A=M  // addr of top",
+                    "D=M  // save to D",
+                    "@R13 // temp",
+                    "M=D",
+                    $"@{parser.Nbr}",
+                    "D=A",
+                    "@R16 // @STATIC 0",
+                    "D=A+D  // D pts to addr static n",
+                    "@R14",
+                    "M=D     // pts to addr static n",
+                    "@R13",
+                    "D=M",
+                    "@R14",
+                    "A=M",
+                    "M=D"
                 }
             );
         }
@@ -292,6 +446,58 @@ namespace vmtranslator {
                 }
             );
         }
+        // Pop this *n* on the stack :: this = R3
+        private void PopThis() {
+            codeLines.AddRange(
+                new string[] {
+                    $"// pop this {parser.Nbr}",
+                    "@SP  // SP",
+                    "M=M-1",
+                    "A=M",
+                    "D=M",
+                    "@R13    // contains popped value",
+                    "M=D",
+                   $"@{parser.Nbr}",
+                    "D=A",
+                    "@R3 // @THIS",
+                    "A=D+M",
+                    "D=A  // D is addr of this 1",
+                    "@R14  // addr of this 1",
+                    "M=D",
+                    "@R13",
+                    "D=M",
+                    "@R14",
+                    "A=M",
+                    "M=D"
+                }
+            );
+        }
+        // Pop that *n* on the stack :: that = R4
+        private void PopThat() {
+            codeLines.AddRange(
+                new string[] {
+                    $"// pop that {parser.Nbr}",
+                    "@SP  // SP",
+                    "M=M-1",
+                    "A=M",
+                    "D=M",
+                    "@R13    // contains popped value",
+                    "M=D",
+                   $"@{parser.Nbr}",
+                    "D=A",
+                    "@R4 // @THAt",
+                    "A=D+M",
+                    "D=A  // D is addr of this 1",
+                    "@R14  // addr of this 1",
+                    "M=D",
+                    "@R13",
+                    "D=M",
+                    "@R14",
+                    "A=M",
+                    "M=D"
+                }
+            );
+        }
         private void Generate() {
             codeLines.Add($"// {parser.Line}"); // change vm code into comment
             switch (parser.Type) {
@@ -311,6 +517,8 @@ namespace vmtranslator {
                         case SegmentType.Constant:  PushConstant();     break;
                         case SegmentType.Static:    PushStatic();       break;
                         case SegmentType.Temp:      PushTemp();         break;
+                        case SegmentType.This:      PushThis();         break;
+                        case SegmentType.That:      PushThat();         break;
                     }
                     break;
                     
@@ -320,13 +528,15 @@ namespace vmtranslator {
                         case SegmentType.Constant:  PopConstant();      break;
                         case SegmentType.Static:    PopStatic();        break;
                         case SegmentType.Temp:      PopTemp();          break;
+                        case SegmentType.This:      PopThis();          break;
+                        case SegmentType.That:      PopThat();          break;
                     }
                     break;
             }
-
         }
 
-        public Code(Parser parser) {
+        public Code(Parser parser, int lineCnt) {
+            this.lineCnt = lineCnt;
             this.parser = parser;
             Generate();
         }
