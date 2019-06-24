@@ -58,8 +58,7 @@ namespace vmtranslator {
                     $"D=M   // sav val in D",
                     $"// add to R13",
                     $"@R13",
-                    $"M=D-M // sub",
-                    $"D=M // sav in D",
+                    $"D=D-M // sav to D",
                     $"// push D",
                     $"@SP",
                     $"A=M",
@@ -263,6 +262,23 @@ namespace vmtranslator {
                 }
             );
         }
+        // push argument *n* value onto stack
+        private void PushArgument() {
+            codeLines.AddRange(
+                new string[] {
+                    $"@{parser.Nbr} // @nbr",
+                    "D=A  // store nbr in D",
+                    "@2  // @ARG",
+                    "A=M+D  // set ptr to new A",
+                    "D=M  // sav local nbr to D",
+                    "@SP",
+                    "A=M  // addr of top",
+                    "M=D  // push nbr",
+                    "@SP",
+                    "M=M+1"
+                }
+            );
+        }
         // push local *n* value onto stack
         private void PushLocal() {
             codeLines.AddRange(
@@ -314,17 +330,18 @@ namespace vmtranslator {
         }
         // Push temp reg to stack
         private void PushTemp() {
-            var tempReg = 5 + parser.Nbr;
             codeLines.AddRange(
                 new string[] {
-                    $"@{tempReg}            // temp reg",
-                    $"A=A+D          // ptr to temp reg",
-                    $"D=M            // sto temp reg in D",
-                    $"@SP            // SP",
-                    $"A=M            // ptr to SP",
-                    $"M=D            // sto temp in stack",
-                    $"@SP            // stack ptr",
-                    $"M=M+1          // SP++"
+                    $"@{parser.Nbr}  // temp reg",
+                    "D=A  // store nbr in D",
+                    "@R5  // addr SP",
+                    "A=A+D  // set ptr to new A",
+                    "D=M  // store nbr in D",
+                    "@SP",
+                    "A=M",
+                    "M=D",
+                    "@SP",
+                    "M=M+1"
                 }
             );
         }
@@ -364,6 +381,32 @@ namespace vmtranslator {
                 }
             );
         }
+        // pop argument n
+        private void PopArgument() {
+            var regOffset = parser.Nbr;
+            codeLines.AddRange(
+                new string[] {
+                    $"// *** pop local {regOffset} ***",
+                    $"@{regOffset}      // local offset",
+                    $"D=A     // store offset in D",
+                    $"@2      // @ARG",
+                    $"A=M+D   // offset to arg n",
+                    $"D=A     // D pts to arg n",
+                    $"@R13",
+                    $"M=D",
+                    $"// pop from stack",
+                    $"@SP   // get the SP",
+                    $"M=M-1   // ptr to top of stk",
+                    $"A=M   // ptr to top",
+                    $"D=M   // sav val in D",
+                    $"// store D in R1",
+                    $"@R13",
+                    $"A=M",
+                    $"M=D"
+                }
+            );
+        }
+        // pop local n
         private void PopLocal() {
             var regOffset = parser.Nbr;
             codeLines.AddRange(
@@ -371,9 +414,9 @@ namespace vmtranslator {
                     $"// *** pop local {regOffset} ***",
                     $"@{regOffset}      // local offset",
                     $"D=A     // store offset in D",
-                    $"@1      // @LCL (local 0)",
-                    $"A=M+D   // local 1",
-                    $"D=A     // D pts to local 1",
+                    $"@1      // @LCL",
+                    $"A=M+D   // offset to arg n",
+                    $"D=A     // D pts to arg n",
                     $"@R13",
                     $"M=D",
                     $"// pop from stack",
@@ -499,7 +542,7 @@ namespace vmtranslator {
             );
         }
         private void Generate() {
-            codeLines.Add($"// {parser.Line}"); // change vm code into comment
+            codeLines.Add($"// VM:{parser.Line}, CNT:{lineCnt}"); // change vm code into comment
             switch (parser.Type) {
                 case LineType.Add:                  Add();              break;
                 case LineType.Sub:                  Sub();              break;
@@ -513,23 +556,25 @@ namespace vmtranslator {
 
                 case LineType.Push: // push segment nbr
                     switch (parser.Segment) {
-                        case SegmentType.Local:     PushLocal();        break;
+                        case SegmentType.Argument:  PushArgument();     break;
                         case SegmentType.Constant:  PushConstant();     break;
+                        case SegmentType.Local:     PushLocal();        break;
                         case SegmentType.Static:    PushStatic();       break;
                         case SegmentType.Temp:      PushTemp();         break;
-                        case SegmentType.This:      PushThis();         break;
                         case SegmentType.That:      PushThat();         break;
+                        case SegmentType.This:      PushThis();         break;
                     }
                     break;
                     
                 case LineType.Pop: // pop segment nbr
                     switch(parser.Segment) {
-                        case SegmentType.Local:     PopLocal();         break;
+                        case SegmentType.Argument:  PopArgument();      break;
                         case SegmentType.Constant:  PopConstant();      break;
+                        case SegmentType.Local:     PopLocal();         break;
                         case SegmentType.Static:    PopStatic();        break;
                         case SegmentType.Temp:      PopTemp();          break;
-                        case SegmentType.This:      PopThis();          break;
                         case SegmentType.That:      PopThat();          break;
+                        case SegmentType.This:      PopThis();          break;
                     }
                     break;
             }
