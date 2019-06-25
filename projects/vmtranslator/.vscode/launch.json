@@ -12,7 +12,7 @@
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/bin/Debug/netcoreapp2.2/vmtranslator.dll",
             // "args": ["./tests/main.vm"],
-            "args": ["./tests/MemoryAccess/BasicTest/BasicTest.vm"],
+            "args": ["./tests/StackArithmetic/StackTest/StackTest.vm"],
             "cwd": "${workspaceFolder}",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",

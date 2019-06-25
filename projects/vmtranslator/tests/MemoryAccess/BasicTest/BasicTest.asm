@@ -7,7 +7,6 @@ M=D  // store nbr in A
 @SP  // addr SP
 M=M+1  // inc SP
 // VM:pop local 0, CNT:1
-// *** pop local 0 ***
 @0      // local offset
 D=A     // store offset in D
 @1      // @LCL
@@ -15,12 +14,10 @@ A=M+D   // offset to arg n
 D=A     // D pts to arg n
 @R13
 M=D
-// pop from stack
 @SP   // get the SP
 M=M-1   // ptr to top of stk
 A=M   // ptr to top
 D=M   // sav val in D
-// store D in R1
 @R13
 A=M
 M=D
@@ -41,7 +38,6 @@ M=D  // store nbr in A
 @SP  // addr SP
 M=M+1  // inc SP
 // VM:pop argument 2, CNT:4
-// *** pop local 2 ***
 @2      // local offset
 D=A     // store offset in D
 @2      // @ARG
@@ -49,17 +45,14 @@ A=M+D   // offset to arg n
 D=A     // D pts to arg n
 @R13
 M=D
-// pop from stack
 @SP   // get the SP
 M=M-1   // ptr to top of stk
 A=M   // ptr to top
 D=M   // sav val in D
-// store D in R1
 @R13
 A=M
 M=D
 // VM:pop argument 1, CNT:5
-// *** pop local 1 ***
 @1      // local offset
 D=A     // store offset in D
 @2      // @ARG
@@ -67,12 +60,10 @@ A=M+D   // offset to arg n
 D=A     // D pts to arg n
 @R13
 M=D
-// pop from stack
 @SP   // get the SP
 M=M-1   // ptr to top of stk
 A=M   // ptr to top
 D=M   // sav val in D
-// store D in R1
 @R13
 A=M
 M=D
@@ -85,7 +76,6 @@ M=D  // store nbr in A
 @SP  // addr SP
 M=M+1  // inc SP
 // VM:pop this 6, CNT:7
-// pop this 6
 @SP  // SP
 M=M-1
 A=M
@@ -121,7 +111,6 @@ M=D  // store nbr in A
 @SP  // addr SP
 M=M+1  // inc SP
 // VM:pop that 5, CNT:10
-// pop that 5
 @SP  // SP
 M=M-1
 A=M
@@ -141,7 +130,6 @@ D=M
 A=M
 M=D
 // VM:pop that 2, CNT:11
-// pop that 2
 @SP  // SP
 M=M-1
 A=M
@@ -196,7 +184,6 @@ M=D  // push nbr
 @SP
 M=M+1
 // VM:push that 5, CNT:15
-// push that 5
 @5
 D=A
 @R4 // @THAT
@@ -208,24 +195,19 @@ M=D  // stor D on stack
 @SP
 M=M+1  // SP++
 // VM:add, CNT:16
-// pop
 @SP   // get the SP
 M=M-1   // ptr to top of stk
 A=M   // ptr to top
 D=M   // sav val in D
-// store D in R1
 @R13
 M=D
-// pop
 @SP   // get the SP
 M=M-1   // ptr to top of stk
 A=M   // ptr to top
 D=M   // sav val in D
-// add to R13
 @R13
 M=M+D // add
 D=M // sav in D
-// push R13
 @SP
 A=M
 M=D
@@ -243,30 +225,24 @@ M=D  // push nbr
 @SP
 M=M+1
 // VM:sub, CNT:18
-// pop
 @SP   // get the SP
 M=M-1   // ptr to top of stk
 A=M   // ptr to top
 D=M   // sav val in D
-// store D in R1
 @R13
 M=D
-// pop
 @SP   // get the SP
 M=M-1   // ptr to top of stk
 A=M   // ptr to top
 D=M   // sav val in D
-// add to R13
 @R13
 D=D-M // sav to D
-// push D
 @SP
 A=M
 M=D
 @SP   // SP++
 M=M+1
 // VM:push this 6, CNT:19
-// push this 6
 @6
 D=A
 @R3 // @THIS
@@ -278,7 +254,6 @@ M=D  // stor D on stack
 @SP
 M=M+1  // SP++
 // VM:push this 6, CNT:20
-// push this 6
 @6
 D=A
 @R3 // @THIS
@@ -290,47 +265,37 @@ M=D  // stor D on stack
 @SP
 M=M+1  // SP++
 // VM:add, CNT:21
-// pop
 @SP   // get the SP
 M=M-1   // ptr to top of stk
 A=M   // ptr to top
 D=M   // sav val in D
-// store D in R1
 @R13
 M=D
-// pop
 @SP   // get the SP
 M=M-1   // ptr to top of stk
 A=M   // ptr to top
 D=M   // sav val in D
-// add to R13
 @R13
 M=M+D // add
 D=M // sav in D
-// push R13
 @SP
 A=M
 M=D
 @SP
 M=M+1
 // VM:sub, CNT:22
-// pop
 @SP   // get the SP
 M=M-1   // ptr to top of stk
 A=M   // ptr to top
 D=M   // sav val in D
-// store D in R1
 @R13
 M=D
-// pop
 @SP   // get the SP
 M=M-1   // ptr to top of stk
 A=M   // ptr to top
 D=M   // sav val in D
-// add to R13
 @R13
 D=D-M // sav to D
-// push D
 @SP
 A=M
 M=D
@@ -348,24 +313,19 @@ M=D
 @SP
 M=M+1
 // VM:add, CNT:24
-// pop
 @SP   // get the SP
 M=M-1   // ptr to top of stk
 A=M   // ptr to top
 D=M   // sav val in D
-// store D in R1
 @R13
 M=D
-// pop
 @SP   // get the SP
 M=M-1   // ptr to top of stk
 A=M   // ptr to top
 D=M   // sav val in D
-// add to R13
 @R13
 M=M+D // add
 D=M // sav in D
-// push R13
 @SP
 A=M
 M=D
