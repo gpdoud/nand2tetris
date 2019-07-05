@@ -51,7 +51,9 @@ namespace vmtranslator {
                 Segment = GetSegmentType(parts[1]);
                 int aNbr;
                 var rc = int.TryParse(parts[2], out aNbr);
-                Nbr = rc ? aNbr : -1;
+                Nbr = rc ? aNbr : -1; 
+            } else if(Type == LineType.Label || Type == LineType.GoTo || Type == LineType.IfGoTo) {
+                Label = parts[1];
             }
             
         }

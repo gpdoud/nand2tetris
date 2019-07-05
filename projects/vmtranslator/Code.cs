@@ -5,10 +5,38 @@ namespace vmtranslator {
 
     class Code {
 
+        static bool isSetup = false;
         private int lineCnt;
         private Parser parser { get; set; }
         List<string> codeLines = new List<string>();
         public string[] ToAsm() { return codeLines.ToArray(); }
+        private void Setup() {
+            codeLines.AddRange(
+                new string[] {
+                    "// SETUP",
+                    "@256 // SP",
+                    "D=A",
+                    "@0",
+                    "M=D",
+                    "@300 // LCL",
+                    "D=A",
+                    "@1",
+                    "M=D",
+                    "@400 // ARG",
+                    "D=A",
+                    "@2",
+                    "M=D",
+                    "@3000 // THIS",
+                    "D=A",
+                    "@3",
+                    "M=D",
+                    "@3010 // THAT",
+                    "D=A",
+                    "@4",
+                    "M=D"
+                }
+            );
+        }
         // pop top 2 from stack; add them; push result to stack
         private void Add() {
             codeLines.AddRange(
@@ -143,6 +171,36 @@ namespace vmtranslator {
                     "M=D",
                     "@SP",
                     "M=M+1"
+                }
+            );
+        }
+        // set a label
+        private void Label() {
+            codeLines.AddRange(
+                new string[] {
+                    $"({parser.Label})"
+                }
+            );
+        }
+        // set a label
+        private void GoTo() {
+            codeLines.AddRange(
+                new string[] {
+                    $"@{parser.Label}",
+                    "0;JMP"
+                }
+            );
+        }
+        // set a label
+        private void IfGoTo() {
+            codeLines.AddRange(
+                new string[] {
+                    "@SP",
+                    "M=M-1",
+                    "A=M",
+                    "D=M",
+                    $"@{parser.Label}",
+                    "D;JNE"
                 }
             );
         }
@@ -585,12 +643,20 @@ namespace vmtranslator {
                         case SegmentType.This:      PopThis();          break;
                     }
                     break;
+
+                case LineType.Label:                Label();            break;
+                case LineType.GoTo:                 GoTo();             break;
+                case LineType.IfGoTo:               IfGoTo();           break;
             }
         }
 
         public Code(Parser parser, int lineCnt) {
             this.lineCnt = lineCnt;
             this.parser = parser;
+            if(!isSetup) {
+                Setup();
+                isSetup = true;
+            }
             Generate();
         }
     }

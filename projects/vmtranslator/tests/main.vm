@@ -1,11 +1,19 @@
-push constant 57
-push constant 31
-push constant 53
+label BEGIN
+push constant 1
+pop local 0
+push constant 10
+pop local 1
+//
+label LOOP
+// add 1
+push local 0
+push constant 1
 add
-push constant 112
+pop local 0
+// check if done
+push local 0
+push local 1
 sub
-neg
-and
-push constant 82
-or
-not
+if-goto LOOP // if !0 loop
+label DONE
+goto DONE
