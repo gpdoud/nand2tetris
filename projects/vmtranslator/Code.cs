@@ -178,7 +178,7 @@ namespace vmtranslator {
         private void Label() {
             codeLines.AddRange(
                 new string[] {
-                    $"({parser.Label})"
+                    $"({parser.Filename}_{parser.Label})"
                 }
             );
         }
@@ -186,7 +186,7 @@ namespace vmtranslator {
         private void GoTo() {
             codeLines.AddRange(
                 new string[] {
-                    $"@{parser.Label}",
+                    $"@{parser.Filename}_{parser.Label}",
                     "0;JMP"
                 }
             );
@@ -199,7 +199,7 @@ namespace vmtranslator {
                     "M=M-1",
                     "A=M",
                     "D=M",
-                    $"@{parser.Label}",
+                    $"@{parser.Filename}_{parser.Label}",
                     "D;JNE"
                 }
             );

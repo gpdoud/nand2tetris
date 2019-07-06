@@ -13,6 +13,7 @@ namespace vmtranslator {
         public string Label { get; set; }
         public string FunctionName { get; set; }
         public int NbrArgs { get; set; }
+        public string Filename { get; set; }
 
         private void Parse() {
             // reset all properties
@@ -72,8 +73,9 @@ namespace vmtranslator {
             }
         }
 
-        public Parser(string sourceLine) {
+        public Parser(string sourceLine, string filename) {
             this.Line = sourceLine;
+            this.Filename = filename;
             Parse();
         }
     }
