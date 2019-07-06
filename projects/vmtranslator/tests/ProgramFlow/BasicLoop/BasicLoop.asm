@@ -1,3 +1,24 @@
+// SETUP
+@256 // SP
+D=A
+@0
+M=D
+@300 // LCL
+D=A
+@1
+M=D
+@400 // ARG
+D=A
+@2
+M=D
+@3000 // THIS
+D=A
+@3
+M=D
+@3010 // THAT
+D=A
+@4
+M=D
 // VM:, CNT:0
 // VM:push constant 0    , CNT:1
 @0 // @nbr
@@ -23,7 +44,7 @@ D=M   // sav val in D
 A=M
 M=D
 // VM:label LOOP_START, CNT:3
-@LOOP_START
+(LOOP_START)
 // VM:push argument 0    , CNT:4
 @0 // @nbr
 D=A  // store nbr in D
@@ -144,7 +165,12 @@ M=D  // push nbr
 @SP
 M=M+1
 // VM:if-goto LOOP_START  , CNT:13
-// If-GoTo LOOP_START
+@SP
+M=M-1
+A=M
+D=M
+@LOOP_START
+D;JNE
 // VM:push local 0, CNT:14
 @0 // @nbr
 D=A  // store nbr in D
