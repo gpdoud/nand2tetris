@@ -5,6 +5,8 @@ namespace vmtranslator {
 
     class Code {
 
+        static string functionName;
+
         static bool isSetup = false;
         private int lineCnt;
         private Parser parser { get; set; }
@@ -178,7 +180,7 @@ namespace vmtranslator {
         private void Label() {
             codeLines.AddRange(
                 new string[] {
-                    $"({parser.Filename}_{parser.Label})"
+                    $"({parser.Filename}${parser.Label})"
                 }
             );
         }
@@ -186,7 +188,7 @@ namespace vmtranslator {
         private void GoTo() {
             codeLines.AddRange(
                 new string[] {
-                    $"@{parser.Filename}_{parser.Label}",
+                    $"@{parser.Filename}${parser.Label}",
                     "0;JMP"
                 }
             );
@@ -199,7 +201,7 @@ namespace vmtranslator {
                     "M=M-1",
                     "A=M",
                     "D=M",
-                    $"@{parser.Filename}_{parser.Label}",
+                    $"@{parser.Filename}${parser.Label}",
                     "D;JNE"
                 }
             );
@@ -339,11 +341,11 @@ namespace vmtranslator {
             );
         }
         // push constant value onto stack
-        private void PushConstant() {
+        private void PushConstant(int n = 0) {
             // @nbr
             codeLines.AddRange(
                 new string[] {
-                    $"@{parser.Nbr} // @nbr",
+                    $"@{n} // Push Constant {n}",
                     $"D=A  // store nbr in D",
                     $"@SP  // addr SP",
                     $"A=M  // set ptr to new A",
@@ -461,11 +463,11 @@ namespace vmtranslator {
             );
         }
         // pop local n
-        private void PopLocal() {
+        private void PopLocal(int n = 0) {
             var regOffset = parser.Nbr;
             codeLines.AddRange(
                 new string[] {
-                    $"@{regOffset}      // local offset",
+                    $"@{n}    // Pop Local {n}",
                     $"D=A     // store offset in D",
                     $"@1      // @LCL",
                     $"A=M+D   // offset to arg n",
@@ -620,34 +622,71 @@ namespace vmtranslator {
 
                 case LineType.Push: // push segment nbr
                     switch (parser.Segment) {
-                        case SegmentType.Argument:  PushArgument();     break;
-                        case SegmentType.Constant:  PushConstant();     break;
-                        case SegmentType.Local:     PushLocal();        break;
-                        case SegmentType.Pointer:   PushPointer();      break;
-                        case SegmentType.Static:    PushStatic();       break;
-                        case SegmentType.Temp:      PushTemp();         break;
-                        case SegmentType.That:      PushThat();         break;
-                        case SegmentType.This:      PushThis();         break;
+                        case SegmentType.Argument:  PushArgument();                 break;
+                        case SegmentType.Constant:  PushConstant(parser.Nbr);       break;
+                        case SegmentType.Local:     PushLocal();                    break;
+                        case SegmentType.Pointer:   PushPointer();                  break;
+                        case SegmentType.Static:    PushStatic();                   break;
+                        case SegmentType.Temp:      PushTemp();                     break;
+                        case SegmentType.That:      PushThat();                     break;
+                        case SegmentType.This:      PushThis();                     break;
                     }
                     break;
                     
                 case LineType.Pop: // pop segment nbr
                     switch(parser.Segment) {
-                        case SegmentType.Argument:  PopArgument();      break;
-                        case SegmentType.Constant:  PopConstant();      break;
-                        case SegmentType.Local:     PopLocal();         break;
-                        case SegmentType.Pointer:   PopPointer();       break;
-                        case SegmentType.Static:    PopStatic();        break;
-                        case SegmentType.Temp:      PopTemp();          break;
-                        case SegmentType.That:      PopThat();          break;
-                        case SegmentType.This:      PopThis();          break;
+                        case SegmentType.Argument:  PopArgument();                  break;
+                        case SegmentType.Constant:  PopConstant();                  break;
+                        case SegmentType.Local:     PopLocal(parser.Nbr);           break;
+                        case SegmentType.Pointer:   PopPointer();                   break;
+                        case SegmentType.Static:    PopStatic();                    break;
+                        case SegmentType.Temp:      PopTemp();                      break;
+                        case SegmentType.That:      PopThat();                      break;
+                        case SegmentType.This:      PopThis();                      break;
                     }
                     break;
 
                 case LineType.Label:                Label();            break;
                 case LineType.GoTo:                 GoTo();             break;
                 case LineType.IfGoTo:               IfGoTo();           break;
+
+                case LineType.Function:             Function();         break;
+                case LineType.Call:                 Call();             break;
+                case LineType.Return:               Return();           break;
             }
+        }
+
+        private void Function() {
+            functionName = parser.FunctionName;
+            codeLines.AddRange(
+                new string[] {
+                    $"({parser.FunctionName}$BEGIN) // Function {parser.FunctionName}"
+                }
+            );
+            var nbrLclVars = parser.Nbr;
+            for(var idx = 0; idx < nbrLclVars; idx++) {
+                PushConstant(777);
+                PopLocal(idx);
+            }
+        }
+
+        private void Call() {
+            codeLines.AddRange(
+                new string[] {
+                    $"@{parser.FunctionName}$BEGIN // Call {parser.FunctionName} {parser.Nbr}",
+                     "0;JMP // jump to function",
+                    $"({parser.FunctionName}$RETURN) // location to return"
+                }
+            );
+        }
+
+        private void Return() {
+            codeLines.AddRange(
+                new string[] {
+                    $"@{functionName}$RETURN // place to return",
+                    "0;JMP"
+                }
+            );
         }
 
         public Code(Parser parser, int lineCnt) {

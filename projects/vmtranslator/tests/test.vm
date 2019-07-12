@@ -1,0 +1,9 @@
+push constant 1
+push constant 2
+call test.add 2
+//
+function test.add 0
+push argument 0
+push argument 1
+add
+return

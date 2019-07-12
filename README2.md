@@ -69,3 +69,20 @@ adding other segments: local, argument, **this**, **that**, constant, static, **
 * CodeWriter class
   *
 * Main class
+
+### Functions
+
+calling function must push N args onto the stack
+
+`call function N` where N is nbr of args pushed onto the stack
+
+pushed onto the stack are: return addr, LCL, ARG, THIS, THAT
+
+set current ARG ptr set to position of 1st arg on the stack (ARG = SP - 5 - N)
+
+LCL = SP (to setup local vars in called function)
+
+Then goto Function
+
+* must put return value (always required) in location of arg 0 
+* SP must point to location after arg 0

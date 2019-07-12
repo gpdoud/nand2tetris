@@ -23,40 +23,54 @@ namespace vmtranslator {
             var parts = Line.Split(' ');
             switch(parts[0].ToLower()) {
                 // arithmetic/logical
-                case "add": Type = LineType.Add; break;
-                case "sub": Type = LineType.Sub; break;
-                case "neg": Type = LineType.Neg; break;
-                case "eq": Type = LineType.Eq; break;
-                case "gt": Type = LineType.Gt; break;
-                case "lt": Type = LineType.Lt; break;
-                case "and": Type = LineType.And; break;
-                case "or": Type = LineType.Or; break;
-                case "not": Type = LineType.Not; break;
+                case "add":         Type = LineType.Add;    break;
+                case "sub":         Type = LineType.Sub;    break;
+                case "neg":         Type = LineType.Neg;    break;
+                case "eq":          Type = LineType.Eq;     break;
+                case "gt":          Type = LineType.Gt;     break;
+                case "lt":          Type = LineType.Lt;     break;
+                case "and":         Type = LineType.And;    break;
+                case "or":          Type = LineType.Or;     break;
+                case "not":         Type = LineType.Not;    break;
                 // memory access
-                case "push": Type = LineType.Push; break;
-                case "pop": Type = LineType.Pop; break;
+                case "push":        
+                    Type = LineType.Push; 
+                    Segment = GetSegmentType(parts[1]); 
+                    Nbr = GetNumberParm(parts[2]); 
+                    break;
+                case "pop":         
+                    Type = LineType.Pop;  
+                    Segment = GetSegmentType(parts[1]); 
+                    Nbr = GetNumberParm(parts[2]); 
+                    break;
                 // branching
-                case "label": Type = LineType.Label; break;
-                case "goto": Type = LineType.GoTo; break;
-                case "if-goto": Type = LineType.IfGoTo; break;
+                case "label":       Type = LineType.Label;      Label = parts[1]; break;
+                case "goto":        Type = LineType.GoTo;       Label = parts[1]; break;
+                case "if-goto":     Type = LineType.IfGoTo;     Label = parts[1]; break;
                 // functions
-                case "function": Type = LineType.Function; break;
-                case "call": Type = LineType.Call; break;
-                case "return": Type = LineType.Return; break;
+                case "function":    
+                    Type = LineType.Function;   
+                    FunctionName = parts[1];
+                    Nbr = GetNumberParm(parts[2]); 
+                    break;
+                case "call":
+                    Type = LineType.Call;
+                    FunctionName = parts[1];
+                    Nbr = GetNumberParm(parts[2]);
+                    break;
+                case "return":      Type = LineType.Return;     break;
                 // just return, no code gen needed
-                case "//": Type = LineType.Comment; return;
-                default: Type = LineType.Unknown; return;
+                case "//":          Type = LineType.Comment;    return;
+                default:            Type = LineType.Unknown;    return;
             }
             OpCode = parts[0];
-            if(Type == LineType.Push || Type == LineType.Pop) {
-                Segment = GetSegmentType(parts[1]);
-                int aNbr;
-                var rc = int.TryParse(parts[2], out aNbr);
-                Nbr = rc ? aNbr : -1; 
-            } else if(Type == LineType.Label || Type == LineType.GoTo || Type == LineType.IfGoTo) {
-                Label = parts[1];
-            }
             
+        }
+
+        private int GetNumberParm(string nbrStr) {
+            int aNbr;
+            var rc = int.TryParse(nbrStr, out aNbr);
+            return rc ? aNbr : -1;         
         }
 
         private SegmentType GetSegmentType(string segment) {
