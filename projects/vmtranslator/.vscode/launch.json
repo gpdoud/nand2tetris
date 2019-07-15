@@ -15,6 +15,7 @@
             "args": ["./tests/main.vm"],
             // "args": ["./tests/"],
             // "args": ["./tests/ProgramFlow/FibonacciSeries/FibonacciSeries.vm"],
+            // "args": ["./tests/MemoryAccess/BasicTest/BasicTest.vm"],
             // "args": ["./tests/GD/Counter.vm"],
             "cwd": "${workspaceFolder}",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console

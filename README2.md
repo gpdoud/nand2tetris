@@ -76,6 +76,8 @@ calling function must push N args onto the stack
 
 `call function N` where N is nbr of args pushed onto the stack
 
+`call` pops the args off the stack and onto the ARG
+
 pushed onto the stack are: return addr, LCL, ARG, THIS, THAT
 
 set current ARG ptr set to position of 1st arg on the stack (ARG = SP - 5 - N)

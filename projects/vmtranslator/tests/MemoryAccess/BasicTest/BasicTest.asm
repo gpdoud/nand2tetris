@@ -1,5 +1,26 @@
+// SETUP
+@256 // SP
+D=A
+@0
+M=D
+@300 // LCL
+D=A
+@1
+M=D
+@400 // ARG
+D=A
+@2
+M=D
+@3000 // THIS
+D=A
+@3
+M=D
+@3010 // THAT
+D=A
+@4
+M=D
 // VM:push constant 10, CNT:0
-@10 // @nbr
+@10 // Push Constant 10
 D=A  // store nbr in D
 @SP  // addr SP
 A=M  // set ptr to new A
@@ -7,7 +28,7 @@ M=D  // store nbr in A
 @SP  // addr SP
 M=M+1  // inc SP
 // VM:pop local 0, CNT:1
-@0      // local offset
+@0    // Pop Local 0
 D=A     // store offset in D
 @1      // @LCL
 A=M+D   // offset to arg n
@@ -22,7 +43,7 @@ D=M   // sav val in D
 A=M
 M=D
 // VM:push constant 21, CNT:2
-@21 // @nbr
+@21 // Push Constant 21
 D=A  // store nbr in D
 @SP  // addr SP
 A=M  // set ptr to new A
@@ -30,7 +51,7 @@ M=D  // store nbr in A
 @SP  // addr SP
 M=M+1  // inc SP
 // VM:push constant 22, CNT:3
-@22 // @nbr
+@22 // Push Constant 22
 D=A  // store nbr in D
 @SP  // addr SP
 A=M  // set ptr to new A
@@ -68,7 +89,7 @@ D=M   // sav val in D
 A=M
 M=D
 // VM:push constant 36, CNT:6
-@36 // @nbr
+@36 // Push Constant 36
 D=A  // store nbr in D
 @SP  // addr SP
 A=M  // set ptr to new A
@@ -95,7 +116,7 @@ D=M
 A=M
 M=D
 // VM:push constant 42, CNT:8
-@42 // @nbr
+@42 // Push Constant 42
 D=A  // store nbr in D
 @SP  // addr SP
 A=M  // set ptr to new A
@@ -103,7 +124,7 @@ M=D  // store nbr in A
 @SP  // addr SP
 M=M+1  // inc SP
 // VM:push constant 45, CNT:9
-@45 // @nbr
+@45 // Push Constant 45
 D=A  // store nbr in D
 @SP  // addr SP
 A=M  // set ptr to new A
@@ -149,7 +170,7 @@ D=M
 A=M
 M=D
 // VM:push constant 510, CNT:12
-@510 // @nbr
+@510 // Push Constant 510
 D=A  // store nbr in D
 @SP  // addr SP
 A=M  // set ptr to new A
