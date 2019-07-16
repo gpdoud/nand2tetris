@@ -1,42 +1,21 @@
-// SETUP
-@256 // SP
-D=A
-@0
-M=D
-@300 // LCL
-D=A
-@1
-M=D
-@400 // ARG
-D=A
-@2
-M=D
-@3000 // THIS
-D=A
-@3
-M=D
-@3010 // THAT
-D=A
-@4
-M=D
-// VM:push constant 11, CNT:0
-@11 // Push Constant 11
+// VM:push constant 2, CNT:0
+@2 // Push Constant 2
 D=A  // store nbr in D
 @SP  // addr SP
 A=M  // set ptr to new A
 M=D  // store nbr in A
 @SP  // addr SP
 M=M+1  // inc SP
-// VM:push constant 22, CNT:1
-@22 // Push Constant 22
+// VM:push constant 3, CNT:1
+@3 // Push Constant 3
 D=A  // store nbr in D
 @SP  // addr SP
 A=M  // set ptr to new A
 M=D  // store nbr in A
 @SP  // addr SP
 M=M+1  // inc SP
-// VM:push constant 33, CNT:2
-@33 // Push Constant 33
+// VM:push constant 5, CNT:2
+@5 // Push Constant 5
 D=A  // store nbr in D
 @SP  // addr SP
 A=M  // set ptr to new A
@@ -98,28 +77,44 @@ M=D
 @main.add$BEGIN // Call main.add 3
 0;JMP // jump to function
 (main.add$RETURN) // location to return
-// VM:label fini, CNT:4
+// VM:pop temp 0, CNT:4
+@R5       // R5 is Temp
+D=A       // sav in D
+@R13      // R13 is temp reg
+M=D       // stor R5 in R13
+@0        // temp 2
+D=A       // stor nbr in D
+@R13      // switch to R13
+M=M+D     // R13 points to temp n
+@SP       // pop from stack
+M=M-1     // dec SP to pt to top
+A=M       // addr top SP
+D=M       // stor val in D
+@R13      // switch to R13
+A=M       // get R13 addr
+M=D       // stor D in temp n
+// VM:label fini, CNT:5
 (main$fini)
-// VM:goto fini, CNT:5
+// VM:goto fini, CNT:6
 @main$fini
 0;JMP
-// VM:function main.add 2, CNT:6
+// VM:function main.add 2, CNT:7
 (main.add$BEGIN) // Function main.add
-@777 // Push Constant 777
+@0 // Push Constant 0
 D=A  // store nbr in D
 @SP  // addr SP
 A=M  // set ptr to new A
 M=D  // store nbr in A
 @SP  // addr SP
 M=M+1  // inc SP
-@777 // Push Constant 777
+@0 // Push Constant 0
 D=A  // store nbr in D
 @SP  // addr SP
 A=M  // set ptr to new A
 M=D  // store nbr in A
 @SP  // addr SP
 M=M+1  // inc SP
-// VM:push argument 2, CNT:7
+// VM:push argument 2, CNT:8
 @2 // @nbr
 D=A  // store nbr in D
 @2  // @ARG
@@ -130,7 +125,7 @@ A=M  // addr of top
 M=D  // push nbr
 @SP
 M=M+1
-// VM:push argument 1, CNT:8
+// VM:push argument 1, CNT:9
 @1 // @nbr
 D=A  // store nbr in D
 @2  // @ARG
@@ -141,7 +136,7 @@ A=M  // addr of top
 M=D  // push nbr
 @SP
 M=M+1
-// VM:add, CNT:9
+// VM:add, CNT:10
 @SP   // get the SP
 M=M-1   // ptr to top of stk
 A=M   // ptr to top
@@ -160,7 +155,7 @@ A=M
 M=D
 @SP
 M=M+1
-// VM:push argument 0, CNT:10
+// VM:push argument 0, CNT:11
 @0 // @nbr
 D=A  // store nbr in D
 @2  // @ARG
@@ -171,7 +166,7 @@ A=M  // addr of top
 M=D  // push nbr
 @SP
 M=M+1
-// VM:add, CNT:11
+// VM:add, CNT:12
 @SP   // get the SP
 M=M-1   // ptr to top of stk
 A=M   // ptr to top
@@ -190,7 +185,7 @@ A=M
 M=D
 @SP
 M=M+1
-// VM:return, CNT:12
+// VM:return, CNT:13
 @1 // save endframe (LCL) to R13
 D=M
 @R13

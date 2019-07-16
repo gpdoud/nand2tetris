@@ -665,7 +665,7 @@ namespace vmtranslator {
             );
             var nbrLclVars = parser.Nbr;
             for(var idx = 0; idx < nbrLclVars; idx++) {
-                PushConstant(777);
+                PushConstant(0);
                 // PopLocal(idx);
             }
         }
@@ -793,7 +793,7 @@ namespace vmtranslator {
             this.lineCnt = lineCnt;
             this.parser = parser;
             if(!isSetup) {
-                Setup();
+                //Setup();
                 isSetup = true;
             }
             Generate();
