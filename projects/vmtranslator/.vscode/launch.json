@@ -12,7 +12,7 @@
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/bin/Debug/netcoreapp2.2/vmtranslator.dll",
             // "args": ["./tests/test.vm"],
-            "args": ["./tests/main.vm"],
+            "args": ["./tests/GD/"],
             // "args": ["./tests/"],
             // "args": ["./tests/ProgramFlow/FibonacciSeries/FibonacciSeries.vm"],
             // "args": ["./tests/MemoryAccess/BasicTest/BasicTest.vm"],

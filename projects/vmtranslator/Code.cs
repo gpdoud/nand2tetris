@@ -15,27 +15,13 @@ namespace vmtranslator {
         private void Setup() {
             codeLines.AddRange(
                 new string[] {
-                    "// SETUP",
-                    "@256 // SP",
+                    "// Bootstrap code",
+                    "@256 // Set SP=256",
                     "D=A",
                     "@0",
                     "M=D",
-                    "@300 // LCL",
-                    "D=A",
-                    "@1",
-                    "M=D",
-                    "@400 // ARG",
-                    "D=A",
-                    "@2",
-                    "M=D",
-                    "@3000 // THIS",
-                    "D=A",
-                    "@3",
-                    "M=D",
-                    "@3010 // THAT",
-                    "D=A",
-                    "@4",
-                    "M=D"
+                    "@Sys.init$BEGIN // call Sys.init (doesn't return)",
+                    "0;JMP"
                 }
             );
         }
@@ -793,7 +779,7 @@ namespace vmtranslator {
             this.lineCnt = lineCnt;
             this.parser = parser;
             if(!isSetup) {
-                //Setup();
+                Setup();
                 isSetup = true;
             }
             Generate();

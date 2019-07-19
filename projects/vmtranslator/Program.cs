@@ -51,11 +51,19 @@ namespace vmtranslator {
             if (isDirectory) { // is a directory
                 var len = filename.Length;
                 if (filename[len - 1] == '\\' || filename[len - 1] == '/') {
-                    filename = filename.Substring(0, len - 2);
-                    return filename + ".asm";
+                    filename = filename.Substring(0, len - 1);
+                    var segments = filename.Split('/');
+                    var newfilename = segments[segments.Length-1];
+                    filename = string.Join('/', segments) + $"/{newfilename}.asm";
+                    /*
+                        Need to get the directory name then create a filename
+                        using the directory name in the directory being parsed.
+                        i.1. ./test/GD/ => ./test/GD/GD.asm
+                    */
+                    return filename;
                 }
             } // else it is a file
-            return inFilename.Substring(0, filename.LastIndexOf('.')) + ".asm";
+            return filename.Substring(0, filename.LastIndexOf('.')) + ".asm";
         }
         bool IsDirectory(string filename) {
             var attr = System.IO.File.GetAttributes(inFilename);

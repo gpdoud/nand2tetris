@@ -72,3 +72,20 @@ Unit 2.4 recap at 22:00
 
 *"Any sufficiently advanced technology is indistinguishable from magic"*
 - Authur C Clark (1963)
+
+## Compiling a directory
+
+Assumed that one VM file in a directory will be called Main.vm and it will have a function 
+called Main.main
+
+Each vm program should start with bootstrap code that calls Sys.init
+
+      SP=256
+      call Sys.init
+
+## Symbol names
+
+static variable should be translated Main._j_ where _j_ is incremented with each encounter
+
+labels within functions should be (_functionname_$_label_)
+returns should be (_functionname_$_ret_._n_) // functions called multiple times
