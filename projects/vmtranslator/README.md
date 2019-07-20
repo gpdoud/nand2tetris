@@ -38,6 +38,9 @@ The function's 'frame' (return address, LCL, ARG, THIS, THAT) [2.4 10:09] is the
 
 Callee starts by setting up n local vars on the stack and assigning LCL to the location. A function always pushes a return value on the stack before issuing RETURN.
 
+Because a function may be called multiple times, the return address in the frame must be used because the called function will be returning
+to different places
+
 ## Executing RETURN
 
 starts by copying the return value to ARG 0 (1st location on the stack).

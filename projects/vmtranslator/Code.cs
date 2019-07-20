@@ -769,7 +769,7 @@ namespace vmtranslator {
                     $"@R14 // jump to return addr",
                     $"A=M",
                     $"0;JMP",
-                    $"@{functionName}$RETURN // place to return",
+                    $"@{parser.FunctionName}$RETURN // place to return",
                     "0;JMP"
                 }
             );

@@ -1,2 +1,7 @@
-function main.add 0
+function Main.main 0
+call Main.add 0
+return
+function Main.add 0
+push constant 777
+pop temp 0
 return
