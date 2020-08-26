@@ -88,3 +88,99 @@ Then goto Function
 
 * must put return value (always required) in location of arg 0 
 * SP must point to location after arg 0
+
+# Compiling
+
+The `Symbol Table` is where all the variables are maintained during compilation and tracks `name`, `type (int, char, bool, etc.)`, `kind (local, static, argument, etc.)`, and `scope`.
+
+Each compilation unit will have its own symbol table (i.e. one for the class and one for each method being compiled).
+
+When compiling a class method, the current object, `this` must be added to the symbol table as an argument.
+
+The `class` and `subroutine` symbol tables can be reset for each class compiled.
+
+When a variable is encountered during compilation, it is looked up first in the subroutine symbol table. If not found, it is looked up in the class symbol table. If not found in the class symbol table, it can ba assumed to not exist.
+
+When a language features unlimited scoping (i.e. new scopes can be created by simply adding a new statement block), each scope requires its own symbol table. The symbol tables are then loaded into a linked list and variables are searched starting with the inner-most symbol table. If not found, the next level symbol table is searched. The search continue through the more general scopes up to and including the class symbol table.
+
+## Expressions
+
+    expression:         term (op term)*
+    term:               IntegerConstant | StringConstant | keywordConstant:     | VarName |
+                        VarName '[' expression ']' | SubroutineCall | '(' expression ')' |
+                        UnaryOp term
+    subroutineCall:     subroutineName '(' expressionList ')' |
+                        ( className | varName ) '.' subroutineName '(' expressionList ')'
+    expressionList:     (expression ( ',' expression)* )?
+    op:                 '+'|'-'|'*'|'/'|'&'|'|'|'<'|'>'|'='
+    unaryOp:            '-'|'~'
+    keywordConstant:    'true'|'false'|'null'|'this'
+
+To compile an infix expression using a method `eval()`, if the expression is a:
+
+    number n:           `push _n_`
+
+    variable var:       `push var`
+    
+    exp1 op exp2:       eval exp1
+                        eval exp2
+                        output op
+
+    op exp1:            eval exp1
+                        output op
+
+    f(exp1, exp2, ...): eval exp1
+                        eval exp2
+                        ...
+                        output call f
+
+## Statements
+
+if(exp1) { statments1 } else { statements2 }
+
+        eval exp1
+        negate
+        if-goto L1
+        eval statements1
+        goto L2
+    label L1
+        eval statements2
+    label L2
+
+while(exp1) { statements1 }
+
+    label L1
+        eval exp1
+        negate
+        if-goto L2
+        eval statements1
+        goto L1
+    label L2
+
+## Object creation
+
+When an object is _declared_ (i.e. var Point p), the variable *p* will be stored on the stack. When the _new_ operator is executed to create an instance of the variable, the object will be allocated somewhere in the heap and the starting address will be stored in *p*.
+
+No code is generated when a variable is declared. The symbol table is updated though.
+
+## Object manipulation
+
+When compiling a statement like: `var a = obj1.methodCall(obj2)`, you first must translate the call into a procedural-style call like `methodCall(obj1, obj2)` which makes the *this* the first argument of each call.
+
+    push this // represents obj1
+    push obj2
+    call methodCall
+
+## Arrays
+
+To compile the statement like: `let arr[exp1] = exp2`
+
+    push arr
+    // compute exp1
+    add
+    // compute exp2
+    pop temp 0 // top of stack is base arr addr
+    pop pointer 1 // set THAT to base arr addr
+    push temp 0 // eval of exp2
+    pop that 0
+
